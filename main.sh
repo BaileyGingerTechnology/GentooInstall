@@ -5,6 +5,7 @@
 
 source ./include/src/preflight.sh
 source ./include/src/disk_functions.sh
+source ./include/src/menu.sh
 
 echo "
     
@@ -48,7 +49,25 @@ echo "
 check_root
 check_distro
 
-echo "$(tput setaf 2)Preflight done, should be good to go!${reset}"
-echo "$(tput setaf 2)First step is disk setup. Which disk should be used?${reset}"
+echo "Preflight done, should be good to go!"
+echo "First step is disk setup."
 declare -a disks="$(ls /dev/*d[a-z])"
-chose_disk "${disks[@]}"
+
+generateDialog "options" "Which disk should be used" "${disks[@]}"
+read choice
+
+parted -a optimal ${disks[$choice-1]} print
+echo "Using disk ${disks[$choice-1]}. This next step will wipe that disk, is that okay?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) partition_disk ${disks[$choice-1]}; break;;
+        No ) echo "The install is incomplete and rebooting will either take you to the existing OS, or restart the process."; exit;;
+    esac
+done
+
+if [[ $_DISTRO -eq "gentoo" ]]; then 
+    mount ${disks[$choice-1]}4 /mnt/gentoo
+else
+    mkdir /mnt/gentoo
+    mount ${disks[$choice-1]}4 /mnt/gentoo
+fi

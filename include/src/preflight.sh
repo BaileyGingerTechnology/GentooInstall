@@ -28,7 +28,7 @@ function check_distro {
 
   fi
 
-  echo "$_MSGSUCCESS Found Distrobution! $_DISTRO "
+  echo "$_MSGSUCCESS Found Distrobution! $_DISTRO"
 
   if [ "$_DISTRO" = "debian" ]; then
     _ID=1
