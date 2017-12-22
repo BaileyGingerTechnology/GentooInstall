@@ -5,10 +5,10 @@
 
 function set_filesystems {
 
-	mkfs.vfat -F 32 '$1'2
-	mkfs.ext4 '$1'4
-	mkswap '$1'3
-	swapon '$1'3
+	mkfs.vfat -F 32 $12
+	mkfs.ext4 $14
+	mkswap $13
+	swapon $13
 
 	echo "Filesystems set. Mounting partition where system will be built."
 }
@@ -26,7 +26,7 @@ function partition_disk {
 	parted -a optimal $1 name 2 boot
 	parted -a optimal $1 mkpart primary 131 643
 	parted -a optimal $1 name 3 swap
-	parted -a optimal $1 mkpart primary 643 -1
+	parted -a optimal $1 mkpart primary 643 -- -1
 	parted -a optimal $1 name 4 rootfs
 	parted -a optimal $1 set 2 boot on
 	parted -a optimal $1 print
