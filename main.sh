@@ -6,6 +6,7 @@
 source ./include/src/preflight.sh
 source ./include/src/disk_functions.sh
 source ./include/src/menu.sh
+source ./include/src/tarball_functions.sh
 
 echo "
     
@@ -42,7 +43,7 @@ echo "
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 ";
 
@@ -53,15 +54,16 @@ echo "Preflight done, should be good to go!"
 echo "First step is disk setup."
 declare -a disks="$(ls /dev/*d[a-z])"
 
-generateDialog "options" "Which disk should be used" "${disks[@]}"
+generateDialog "options" "Which disk should be used? For a different disk, select one and then select 'Different' later." "${disks[@]}"
 read choice
 
 parted -a optimal ${disks[$choice-1]} print
 echo "Using disk ${disks[$choice-1]}. This next step will wipe that disk, is that okay?"
-select yn in "Yes" "No"; do
-    case $yn in
+select ynd in "Yes" "No" "Different"; do
+    case $ynd in
         Yes ) partition_disk ${disks[$choice-1]}; break;;
         No ) echo "The install is incomplete and rebooting will either take you to the existing OS, or restart the process."; exit;;
+        Different ) different_disk
     esac
 done
 
@@ -71,3 +73,8 @@ else
     mkdir /mnt/gentoo
     mount ${disks[$choice-1]}4 /mnt/gentoo
 fi
+
+# Set time
+ntpd -q -g
+
+download_tarball

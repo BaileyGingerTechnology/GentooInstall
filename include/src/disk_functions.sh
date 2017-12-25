@@ -1,10 +1,9 @@
 #!/bin/bash
 # Author  : Bailey Kasin
 # Date    : 12/14/2017
-# Purpose : Function used for disk setup
+# Purpose : Functions used for disk setup
 
 function set_filesystems {
-
 	mkfs.vfat -F 32 $12
 	mkfs.ext4 $14
 	mkswap $13
@@ -14,6 +13,7 @@ function set_filesystems {
 }
 
 function partition_disk {
+	_CONFIGURED-DISK=$1
 
 	echo "Using parted to label disk GPT."
 	parted -a optimal $1 mklabel gpt
@@ -35,3 +35,8 @@ function partition_disk {
 	set_filesystems $1
 }
 
+function different_disk {
+	echo "Enter disk to use in format '/dev/xxx'"
+	read input
+	partition_disk $input
+}
