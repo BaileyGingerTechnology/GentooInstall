@@ -13,7 +13,7 @@ function set_filesystems {
 }
 
 function partition_disk {
-	_CONFIGURED-DISK=$1
+	_CONFIGUREDDISK=$1
 
 	echo "Using parted to label disk GPT."
 	parted -a optimal $1 mklabel gpt

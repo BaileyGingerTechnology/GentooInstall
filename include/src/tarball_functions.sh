@@ -31,7 +31,7 @@ function resolv_mount {
 
 	echo "Mounting boot partition."
 	mkdir /boot
-	mount /dev/$_CONFIGURED-DISK2 /boot
+	mount /dev/$_CONFIGUREDDISK2 /boot
 
 	emerge_update
 }

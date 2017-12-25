@@ -63,15 +63,15 @@ select ynd in "Yes" "No" "Different"; do
     case $ynd in
         Yes ) partition_disk ${disks[$choice-1]}; break;;
         No ) echo "The install is incomplete and rebooting will either take you to the existing OS, or restart the process."; exit;;
-        Different ) different_disk
+        Different ) different_disk; break;;
     esac
 done
 
 if [[ $_DISTRO -eq "gentoo" ]]; then 
-    mount ${disks[$choice-1]}4 /mnt/gentoo
+    mount $_CONFIGUREDDISK4 /mnt/gentoo
 else
     mkdir /mnt/gentoo
-    mount ${disks[$choice-1]}4 /mnt/gentoo
+    mount $_CONFIGUREDDISK4 /mnt/gentoo
 fi
 
 # Set time
