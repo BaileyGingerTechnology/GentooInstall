@@ -3,15 +3,22 @@
 # Date    : 12/14/2017
 # Purpose : Find system info before starting everything
 
+source ./useful_functions.sh
+
 function check_root {
 
-  echo "Super user access is needed as disk partition modification and mounting will happen."
+  redEcho "Super user access is needed as disk partition modification and mounting will happen."
 
   if [ "$EUID" != 0 ]; then
-  	echo -e "$_MSGERROR No Super User access....now exiting..";
+  	redEcho "$_MSGERROR No Super User access....now exiting..";
     exit 0;
   fi
 
+}
+
+function not_gentoo {
+  orangeEcho "Since you are not on Gentoo, some extra steps will need to be taken
+  	during portions of this install, but it should still all go fine."
 }
 
 function check_distro {
@@ -28,65 +35,48 @@ function check_distro {
 
   fi
 
-  echo "$_MSGSUCCESS Found Distrobution! $_DISTRO"
+  echo -e "\n"
 
   if [ "$_DISTRO" = "debian" ]; then
     _ID=1
     _NAME=Debian
-    echo "
-  	Since you are not on Gentoo, some extra steps will need to be taken
-  	during portions of this install, but it should still all go fine.
-  	"
+    not_gentoo
   fi
 
 
   if [ "$_DISTRO" = "ubuntu" ]; then
     _ID=2
     _NAME=Ubuntu
-    echo "
-  	Since you are not on Gentoo, some extra steps will need to be taken
-  	during portions of this install, but it should still all go fine.
-  	"
+    not_gentoo
   fi
 
 
   if [ "$_DISTRO" = "red hat" ]; then
     _ID=3
     _NAME=RedHat
-    echo "
-  	Since you are not on Gentoo, some extra steps will need to be taken
-  	during portions of this install, but it should still all go fine.
-  	"
+    not_gentoo
   fi
 
 
   if [ "$_DISTRO" = "centos" ]; then
     _ID=4
     _NAME=CentOS
-    echo "
-  	Since you are not on Gentoo, some extra steps will need to be taken
-  	during portions of this install, but it should still all go fine.
-  	"
+    not_gentoo
   fi
 
 
   if [ "$_DISTRO" = "gentoo" ]; then
     _ID=5
     _NAME=Gentoo
-    echo "
-  	Since you are on Gentoo, everythin should go fine and be a faster during
-  	the install process.
-  	"
+    orangeEcho "Since you are on Gentoo, everything should go fine and be a faster during
+  	the install process."
   fi
 
   if [ "$_DISTRO" = "arch" ]; then
     _ID=6
     _NAME=Arch
     _BANNER=""
-    echo "
-  	Since you are not on Gentoo, some extra steps will need to be taken
-  	during portions of this install, but it should still all go fine.
-  	"
+    not_gentoo
   fi
 
 }

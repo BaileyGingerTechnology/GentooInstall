@@ -34,9 +34,9 @@ function generateText() {
     padding=$(generatePadding "$paddingSymbol" "$charsToPadEachSide");
     totalChars=$(( ${#symbol} + ${#padding} + ${#1} + ${#padding} + ${#symbol} ));
     if [[ ${totalChars} < ${lineLength} ]]; then
-        echo "${symbol}${padding}${1}${padding}${paddingSymbol}${symbol}";
+        echo -e "${symbol}${padding}${1}${padding}${paddingSymbol}${symbol}";
     else
-        echo "${symbol}${padding}${1}${padding}${symbol}";
+        echo -e "${symbol}${padding}${1}${padding}${symbol}";
     fi
 }
 

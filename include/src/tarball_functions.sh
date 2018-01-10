@@ -56,9 +56,10 @@ function make_make {
 function download_tarball {
 	cd /mnt/gentoo
 
-	echo "This is where we get the tarball that will be used to make the base filesystem. Eventually I may be able to automate this part, but for now I am going to open links to Gentoo's mirror page.
+	greenEcho "This is where we get the tarball that will be used to make the base filesystem. Eventually I may be able to automate this part, but for now I am going to open links to Gentoo's mirror page.
 	Pick a server close to you, and then the stage 3 .tar.bz2 that best matches your system."
-	sleep 1
+	echo  "Press enter to continue."
+	read enter
 
 	links https://www.gentoo.org/downloads/mirrors/
 

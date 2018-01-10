@@ -7,8 +7,9 @@ source ./include/src/preflight.sh
 source ./include/src/disk_functions.sh
 source ./include/src/menu.sh
 source ./include/src/tarball_functions.sh
+source ./include/src/useful_functions.sh
 
-echo "
+echo "$(tput setaf 3)
     
  _____            _                    
 |  __ \          | |                   
@@ -30,7 +31,7 @@ echo "
     Email: baileykasin@gmail.com
     For Latest Version Visit https://github.com/BaileyGingerTechnology/GentooInstall
 
-    Copyright (C) 2017 Bailey Kasin || Ginger Technology
+    Copyright (C) 2017-2018 Bailey Kasin || Ginger Technology
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -45,16 +46,17 @@ echo "
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-";
+$(tput sgr0)";
 
 check_root
 check_distro
 
 echo "Preflight done, should be good to go!"
 echo "First step is disk setup."
-declare -a disks="$(ls /dev/*d[a-z])"
+disks=( $(blkid | sed 's/[0-9].*$//g' - | sort -u -) ) 
 
-generateDialog "options" "Which disk should be used? For a different disk, select one and then select 'Different' later." "${disks[@]}"
+greenEcho "For a different disk, select one and then select 'Different' later."
+generateDialog "options" "Which disk should be used?" "${disks[@]}"
 read choice
 
 parted -a optimal ${disks[$choice-1]} print
