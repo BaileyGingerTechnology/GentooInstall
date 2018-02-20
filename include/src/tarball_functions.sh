@@ -67,7 +67,7 @@ function download_tarball {
 	links https://www.gentoo.org/downloads/mirrors/
 
 	echo "Unpacking the tarball."
-	tar xvjpf stage3-*.tar.bz2 --xattrs --numeric-owner
+	tar xvpf stage3-*.tar.xz --xattrs --numeric-owner
 
 	echo "Tarball unpacked. Configuring make.conf for Portage."
 	make_make

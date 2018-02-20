@@ -55,7 +55,7 @@ check_distro
 
 echo "Preflight done, should be good to go!"
 echo "First step is disk setup."
-disks=( $(blkid | sed 's/[0-9].*$//g' - | sort -u -) ) 
+disks=( $(ls /dev/sd[a-z] | sort -u -) ) 
 
 greenEcho "For a different disk, select one and then select 'Different' later."
 generateDialog "options" "Which disk should be used?" "${disks[@]}"
