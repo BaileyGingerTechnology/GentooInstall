@@ -10,6 +10,13 @@ function set_filesystems {
 	swapon $13
 
 	echo "Filesystems set. Mounting partition where system will be built."
+
+	orangeEcho "Making an fstab file now, which will be used later."
+	touch /tmp/fstab
+	echo "/dev/$12		/boot		ext2	defaults,noatime	0 2" >> /tmp/fstab
+	echo "/dev/$13		none		swap	sw					0 0" >> /tmp/fstab
+	echo "/dev/$14		/			ext4	noatime				0 1" >> /tmp/fstab
+	echo "/dev/cdrom	/mnt/cdrom	auto	noauto,user			0 0" >> /tmp/fstab
 }
 
 function partition_disk {

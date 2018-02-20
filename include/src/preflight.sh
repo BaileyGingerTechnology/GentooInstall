@@ -68,7 +68,7 @@ function check_distro {
   if [ "$_DISTRO" = "gentoo" ]; then
     _ID=5
     _NAME=Gentoo
-    orangeEcho "Since you are on Gentoo, everything should go fine and be a faster during
+    orangeEcho "Since you are on Gentoo, everything should go fine and be bit a faster during
   	the install process."
   fi
 

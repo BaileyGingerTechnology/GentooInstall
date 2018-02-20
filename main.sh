@@ -8,6 +8,8 @@ source ./include/src/disk_functions.sh
 source ./include/src/menu.sh
 source ./include/src/tarball_functions.sh
 source ./include/src/useful_functions.sh
+source ./include/src/profile_functions.sh
+source ./include/src/kernel_functions.sh
 
 echo "$(tput setaf 3)
     
@@ -27,7 +29,7 @@ echo "$(tput setaf 3)
  \___/_| |_|___/\__\__,_|_|_|\___|_|   
                                        
 
-    Beta Version: 0.0.1
+    Beta Version: 0.0.3
     Email: baileykasin@gmail.com
     For Latest Version Visit https://github.com/BaileyGingerTechnology/GentooInstall
 
@@ -80,3 +82,5 @@ fi
 ntpd -q -g
 
 download_tarball
+pick_profile
+download_install_kernel

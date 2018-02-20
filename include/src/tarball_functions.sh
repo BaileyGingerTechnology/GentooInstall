@@ -11,6 +11,8 @@ function emerge_update {
 function resolv_mount {
 	echo "Copying over resolv.conf"
 	cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
+	echo "Copying over the fstab file made earlier"
+	cp /tmp/fstab /mnt/gentoo/etc/
 
 	echo "Mount filesystem and chrooting."
 	mount --types proc /proc /mnt/gentoo/proc
@@ -40,8 +42,9 @@ function make_make {
 	core_count=$(lscpu |grep CPU |(sed -n 2p) |awk '{print $2}')
 
 	if [[ $_DISTRO -eq "gentoo" ]]; then 
-    	echo "Pick the mirror closest to you."
-    	sleep 1
+    	greenEcho "Pick the mirror closest to you."
+		echo  "Press enter to continue."
+		read enter
     	mirrorselect -i -o >> /mnt/gentoo/etc/portage/make.conf
 	else
     	echo "Since you are not using Gentoo, mirrorselect will not work. Setting mirror to "
