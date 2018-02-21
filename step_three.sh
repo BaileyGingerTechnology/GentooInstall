@@ -10,6 +10,7 @@ source ./include/src/tarball_functions.sh
 source ./include/src/useful_functions.sh
 source ./include/src/profile_functions.sh
 source ./include/src/kernel_functions.sh
+source ./include/src/system_var_functions.sh
 
 echo "$(tput setaf 3)
     
@@ -84,8 +85,8 @@ emerge sys-apps/mlocate
 
 # Set SSH server to start at boot if needed
 echo "Do you need SSH access to this computer?"
-select ynd in "Yes" "No"; do
-    case $ynd in
+select yn in "Yes" "No"; do
+    case $yn in
         Yes ) rc-update add sshd default; break;;
         No ) break;;
     esac
@@ -98,7 +99,7 @@ emerge net-wireless/iw net-wireless/wpa_supplicant
 
 greenEcho "Installing grub"
 # Set value from file to variable again
-_CONFIGUREDDISK=$(cat diskUsed.txt)
+_CONFIGUREDDISK=$(cat /tmp/diskUsed.txt)
 # Install GRUB on that disk
 install_grub $_CONFIGUREDDISK
 

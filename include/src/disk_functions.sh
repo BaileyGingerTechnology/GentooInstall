@@ -25,7 +25,7 @@ function set_filesystems {
 
 function partition_disk {
 	# Save the disk used to a file for later use
-	echo $1 > diskUsed.txt
+	echo $1 > /tmp/diskUsed.txt
 
 	# Make the disk GPT to make life easy later
 	echo "Using parted to label disk GPT."

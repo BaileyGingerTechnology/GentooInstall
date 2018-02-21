@@ -3,8 +3,6 @@
 # Date    : 12/14/2017
 # Purpose : Find system info before starting everything
 
-source ./useful_functions.sh
-
 function check_root {
 
   redEcho "Super user access is needed as disk partition modification and mounting will happen."

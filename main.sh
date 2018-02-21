@@ -10,6 +10,7 @@ source ./include/src/tarball_functions.sh
 source ./include/src/useful_functions.sh
 source ./include/src/profile_functions.sh
 source ./include/src/kernel_functions.sh
+source ./include/src/system_var_functions.sh
 
 echo "$(tput setaf 3)
     
@@ -78,8 +79,8 @@ select ynd in "Yes" "No" "Different"; do
 done
 
 # Get the disk to mount from the file it was saved in and then append 4 to it
-_CONFIGUREDDISK=$(cat diskUsed.txt)
-_CONFIGUREDDISK=$( $_CONFIGUREDDISK+4 )
+_CONFIGUREDDISK=$( cat /tmp/diskUsed.txt )
+_CONFIGUREDDISK="${_CONFIGUREDDISK}4"
 
 # Mount that disk to be used as the actual install location
 if [[ $_DISTRO -eq "gentoo" ]]; then 
@@ -88,6 +89,10 @@ else
     mkdir /mnt/gentoo
     mount $_CONFIGUREDDISK /mnt/gentoo
 fi
+
+# Move the diskUsed file over
+mkdir /mnt/gentoo/tmp
+cp /tmp/diskUsed.txt /mnt/gentoo/tmp
 
 # Set time
 ntpd -q -g
