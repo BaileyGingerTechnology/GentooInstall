@@ -50,19 +50,25 @@ echo "$(tput setaf 3)
 
 $(tput sgr0)";
 
+# Check for root privileges
 check_root
+# Check whether on Gentoo or other OS
 check_distro
 
 echo "Preflight done, should be good to go!"
 echo "First step is disk setup."
+# Make array of possible disks that can be mounted
 disks=( $(ls /dev/sd[a-z] | sort -u -) ) 
 
 greenEcho "For a different disk, select one and then select 'Different' later."
+# Generate a menu of the disks for the user to chose from
 generateDialog "options" "Which disk should be used?" "${disks[@]}"
 read choice
 
+# Print the current partitions of the chosen disk
 parted -a optimal ${disks[$choice-1]} print
 echo "Using disk ${disks[$choice-1]}. This next step will wipe that disk, is that okay?"
+# If the user says yes, continue. No, die. Different, let them type in the name of a disk
 select ynd in "Yes" "No" "Different"; do
     case $ynd in
         Yes ) partition_disk ${disks[$choice-1]}; break;;
@@ -71,9 +77,11 @@ select ynd in "Yes" "No" "Different"; do
     esac
 done
 
+# Get the disk to mount from the file it was saved in and then append 4 to it
 _CONFIGUREDDISK=$(cat diskUsed.txt)
 _CONFIGUREDDISK=$( $_CONFIGUREDDISK+4 )
 
+# Mount that disk to be used as the actual install location
 if [[ $_DISTRO -eq "gentoo" ]]; then 
     mount $_CONFIGUREDDISK /mnt/gentoo
 else
@@ -84,4 +92,5 @@ fi
 # Set time
 ntpd -q -g
 
+# Move into the tarball_functions script and continue there
 download_tarball

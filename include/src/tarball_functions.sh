@@ -4,35 +4,49 @@
 # Purpose : Functiona used to get the stage3 tarball
 
 function emerge_update {
+	# Finish the chroot
+	source /etc/profile
+	export PS1="(chroot) ${PS1}"
+
+	# Finish mounting now that we are chrooted
 	echo "Mounting boot partition."
 	mkdir /boot
 	mount /dev/sda2 /boot
 
+	# Get the latest metadata
 	emerge-webrsync
+	# Check for new versions. Also output the output to a file
 	emerge --sync |tee emergeOutput.txt
 
+	# Set a variable equal to the sync output, then get rid of every
+	# line that doesn't contain --oneshot portage, which will only
+	# be there if portage needs an update.
 	portageUpdate=$(cat emergeOutput.txt |grep "--oneshot portage")
 
+	# Update portage if needed
 	if [[ $portageUpdate = *"oneshot"* ]]; then
 		emerge --oneshot portage
 	fi
 }
 
 function resolv_mount {
+	# Make the repos.conf directory for portage
 	mkdir --parents /mnt/gentoo/etc/portage/repos.conf
+	# And then put the default config there
 	cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
 	echo "Copying over resolv.conf"
 	cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
 	echo "Copying over the fstab file made earlier"
 	cp /tmp/fstab /mnt/gentoo/etc/
 
-	echo "Mount filesystem and chrooting."
+	echo "Mount filesystem and chroot."
 	mount --types proc /proc /mnt/gentoo/proc
 	mount --rbind /sys /mnt/gentoo/sys
 	mount --make-rslave /mnt/gentoo/sys
 	mount --rbind /dev /mnt/gentoo/dev
 	mount --make-rslave /mnt/gentoo/dev
 
+	# OSes other than Gentoo need an extra step when mounting
 	if [ "$_DISTRO" != "gentoo" ]; then
 		test -L /dev/shm && rm /dev/shm && mkdir /dev/shm
 		mount --types tmpfs --options nosuid,nodev,noexec shm /dev/shm
@@ -42,14 +56,16 @@ function resolv_mount {
 	greenEcho "About to chroot. This will cause the script to exit. After it does, open a new terminal and run step_two.sh with sudo privileges. DO NOT CLOSE THIS TERMINAL."
 	read enter
 	chroot /mnt/gentoo /bin/bash
-	source /etc/profile
-	export PS1="(chroot) ${PS1}"
 }
 
 function make_make {
+	# Get how many cores/threads the CPU has, and then add 1
 	core_count=$(lscpu |grep CPU |(sed -n 2p) |awk '{print $2}')
 	let core_count+=1
 
+	# Gentoo has a script called mirrorselect, which handles the setting of a repo mirror.
+	# Other OSes do not. So let Gentoo users do it that way, and a different way will have
+	# to be found for others.
 	if [[ $_DISTRO -eq "gentoo" ]]; then 
     	greenEcho "Pick the mirror closest to you."
 		echo  "Press enter to continue."
@@ -60,6 +76,8 @@ function make_make {
     	#mount ${disks[$choice-1]}4 /mnt/gentoo
 	fi
 
+	# If setting the core count kept the plus, set it to 2 instead
+	# Otherwise, echo the core count into make.conf
 	if [[ $core_count = *"+"* ]]; then
 		echo "MAKEOPTS=-j2" >> /mnt/gentoo/etc/portage/make.conf
 	else
@@ -78,8 +96,10 @@ function download_tarball {
 	echo  "Press enter to continue."
 	read enter
 
+	# Open the links terminal web browser to download the tarball
 	links https://www.gentoo.org/downloads/mirrors/
 
+	# Expand it and keep file attributes and permissions the same
 	echo "Unpacking the tarball."
 	tar xvpf stage3-*.tar.xz --xattrs --numeric-owner
 

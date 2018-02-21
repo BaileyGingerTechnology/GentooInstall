@@ -55,6 +55,7 @@ check_distro
 
 echo "Preflight done, should be good to go!"
 
+# Move the GentooInstall director into the chroot zone
 cd ../
 mv GentooInstall /mnt/gentoo/GentooInstall
 

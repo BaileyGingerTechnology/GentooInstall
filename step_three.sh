@@ -50,28 +50,39 @@ echo "$(tput setaf 3)
 
 $(tput sgr0)";
 
+# Check for root privileges
 check_root
+# Check whether on Gentoo or other OS
 check_distro
 
 echo "Preflight done, should be good to go!"
+# Go into the tarball_functions directory and sync/update emerge
 emerge_update
+# Select the profile
 pick_profile
+# Download the kernel sources
 download_install_kernel
+# Go into system_var_functions and configure stuff there
 set_hostname
+# Configure network interface
 configure_network
 
 echo "Now setting password for root user!"
 passwd
 
 # Installing system tools
+# Logger
 emerge app-admin/sysklogd
 rc-update add sysklogd default
 
+# Cron manager
 emerge sys-process/cronie
 rc-update add cronie default
 
+# Indexing system
 emerge sys-apps/mlocate
 
+# Set SSH server to start at boot if needed
 echo "Do you need SSH access to this computer?"
 select ynd in "Yes" "No"; do
     case $ynd in
@@ -80,11 +91,16 @@ select ynd in "Yes" "No"; do
     esac
 done
 
+# Install DHCP client
 emerge net-misc/dhcpcd
+# Install wireless tools
 emerge net-wireless/iw net-wireless/wpa_supplicant
 
 greenEcho "Installing grub"
-install_grub ${disks[$choice-1]}
+# Set value from file to variable again
+_CONFIGUREDDISK=$(cat diskUsed.txt)
+# Install GRUB on that disk
+install_grub $_CONFIGUREDDISK
 
 greenEcho "We should be done."
 

@@ -4,14 +4,18 @@
 # Purpose : Functions used for disk setup
 
 function set_filesystems {
+	# Make the boot partition FAT32
 	mkfs.vfat -F 32 $12
+	# Make the file partition ext4
 	mkfs.ext4 $14
+	# Make the third partition swap
 	mkswap $13
 	swapon $13
 
 	echo "Filesystems set. Mounting partition where system will be built."
 
 	orangeEcho "Making an fstab file now, which will be used later."
+	# This file is used by both the system and genkernel. Easier to make it now than later
 	touch /tmp/fstab
 	echo "/dev/$12		/boot		ext2	defaults,noatime	0 2" >> /tmp/fstab
 	echo "/dev/$13		none		swap	sw					0 0" >> /tmp/fstab
@@ -20,12 +24,18 @@ function set_filesystems {
 }
 
 function partition_disk {
+	# Save the disk used to a file for later use
 	echo $1 > diskUsed.txt
 
+	# Make the disk GPT to make life easy later
 	echo "Using parted to label disk GPT."
 	parted -a optimal $1 mklabel gpt
+	# Partition sizes will be given in megabytes
 	parted -a optimal $1 unit mib
 	echo "Setting partition format as recommended in Gentoo Handbook."
+	# Refer to the disk setup chapter for specifics
+	# But basically
+	# Four partitions. grub, boot, swap, files
 	parted -a optimal $1 mkpart primary 1 3
 	parted -a optimal $1 name 1 grub
 	parted -a optimal $1 set 1 bios_grub on
@@ -42,6 +52,7 @@ function partition_disk {
 	set_filesystems $1
 }
 
+# Let the user enter a different disk and then partition it
 function different_disk {
 	echo "Enter disk to use in format '/dev/xxx'"
 	read input
