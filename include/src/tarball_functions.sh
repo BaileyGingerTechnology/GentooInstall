@@ -6,7 +6,7 @@
 function emerge_update {
 	echo "Mounting boot partition."
 	mkdir /boot
-	mount /dev/$_CONFIGUREDDISK2 /boot
+	mount /dev/sda2 /boot
 
 	emerge-webrsync
 	emerge --sync
@@ -42,7 +42,7 @@ function resolv_mount {
 
 function make_make {
 	core_count=$(lscpu |grep CPU |(sed -n 2p) |awk '{print $2}')
-	core_count=$( $core_count+1 )
+	core_count=$( expr $core_count+1 )
 	if [[ $_DISTRO -eq "gentoo" ]]; then 
     	greenEcho "Pick the mirror closest to you."
 		echo  "Press enter to continue."

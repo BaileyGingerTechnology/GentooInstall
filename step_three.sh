@@ -87,10 +87,6 @@ greenEcho "Installing grub"
 install_grub ${disks[$choice-1]}
 
 greenEcho "We should be done."
-exit
-cd
-umount -l /mnt/gentoo/dev{/shm,/pts,}
-umount -R /mnt/gentoo
 
 greenEcho "Going to reboot now. Good luck, soldier."
 greenEcho "I suggest making a new user after the reboot. Refer to the Finalizing page of the Gentoo handbook for details on that."
