@@ -38,3 +38,16 @@ function set_timezone {
 
     set_locales
 }
+
+function set_hostname {
+    orangeEcho "What do you want your hostname to be?"
+    read userHostname
+
+    echo $userHostname > /etc/conf.d/hostname
+}
+
+function install_grub {
+    emerge --verbose sys-boot/grub:2
+    grub-install $1
+    grub-mkconfig -o /boot/grub/grub.cfg
+}

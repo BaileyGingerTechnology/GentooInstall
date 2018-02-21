@@ -84,3 +84,43 @@ ntpd -q -g
 download_tarball
 pick_profile
 download_install_kernel
+set_hostname
+configure_network
+
+echo "Now setting password for root user!"
+passwd
+
+# Installing system tools
+emerge app-admin/sysklogd
+rc-update add sysklogd default
+
+emerge sys-process/cronie
+rc-update add cronie default
+
+emerge sys-apps/mlocate
+
+echo "Do you need SSH access to this computer?"
+select ynd in "Yes" "No"; do
+    case $ynd in
+        Yes ) rc-update add sshd default; break;;
+        No ) break;;
+    esac
+done
+
+emerge net-misc/dhcpcd
+emerge net-wireless/iw net-wireless/wpa_supplicant
+
+greenEcho "Installing grub"
+install_grub ${disks[$choice-1]}
+
+greenEcho "We should be done."
+exit
+cd
+umount -l /mnt/gentoo/dev{/shm,/pts,}
+umount -R /mnt/gentoo
+
+greenEcho "Going to reboot now. Good luck, soldier."
+greenEcho "I suggest making a new user after the reboot. Refer to the Finalizing page of the Gentoo handbook for details on that."
+orangeEcho "Press enter to reboot"
+read enter
+reboot
