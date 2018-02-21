@@ -9,7 +9,13 @@ function emerge_update {
 	mount /dev/sda2 /boot
 
 	emerge-webrsync
-	emerge --sync
+	emerge --sync |tee emergeOutput.txt
+
+	portageUpdate=$(cat emergeOutput.txt |grep "--oneshot portage")
+
+	if [[ $portageUpdate = *"oneshot"* ]]; then
+		emerge --oneshot portage
+	fi
 }
 
 function resolv_mount {
@@ -42,7 +48,8 @@ function resolv_mount {
 
 function make_make {
 	core_count=$(lscpu |grep CPU |(sed -n 2p) |awk '{print $2}')
-	core_count=$( expr $core_count+1 )
+	let core_count+=1
+
 	if [[ $_DISTRO -eq "gentoo" ]]; then 
     	greenEcho "Pick the mirror closest to you."
 		echo  "Press enter to continue."
@@ -52,7 +59,12 @@ function make_make {
     	echo "Since you are not using Gentoo, mirrorselect will not work. Setting mirror to "
     	#mount ${disks[$choice-1]}4 /mnt/gentoo
 	fi
-	echo "MAKEOPTS=-j$core_count" >> /mnt/gentoo/etc/portage/make.conf
+
+	if [[ $core_count = *"+"* ]]; then
+		echo "MAKEOPTS=-j2" >> /mnt/gentoo/etc/portage/make.conf
+	else
+		echo "MAKEOPTS=-j$core_count" >> /mnt/gentoo/etc/portage/make.conf
+	fi
 
 	echo "Portage configured. Preparing for chroot."
 	resolv_mount

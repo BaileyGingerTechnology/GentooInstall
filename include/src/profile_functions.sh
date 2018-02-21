@@ -18,5 +18,5 @@ function pick_profile {
     orangeEcho "Refer to XKCD 303. Press enter to continue."
     read enter
 
-    emerge --ask --update --deep --newuse @world
+    emerge --update --deep --newuse @world
 }

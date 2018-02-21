@@ -29,7 +29,7 @@ echo "$(tput setaf 3)
  \___/_| |_|___/\__\__,_|_|_|\___|_|   
                                        
 
-    Beta Version: 0.1
+    Version: 1.0
     Email: baileykasin@gmail.com
     For Latest Version Visit https://github.com/BaileyGingerTechnology/GentooInstall
 
@@ -55,6 +55,7 @@ check_distro
 
 echo "Preflight done, should be good to go!"
 
-git clone https://github.com/BaileyGingerTechnology/GentooInstall.git /mnt/gentoo/GentooInstall
+cd ../
+mv GentooInstall /mnt/gentoo/GentooInstall
 
 greenEcho "Step two done. Now go back to the original terminal and run step_three.sh."

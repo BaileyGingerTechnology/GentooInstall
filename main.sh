@@ -29,7 +29,7 @@ echo "$(tput setaf 3)
  \___/_| |_|___/\__\__,_|_|_|\___|_|   
                                        
 
-    Beta Version: 0.1
+    Version: 1.0
     Email: baileykasin@gmail.com
     For Latest Version Visit https://github.com/BaileyGingerTechnology/GentooInstall
 
@@ -71,11 +71,14 @@ select ynd in "Yes" "No" "Different"; do
     esac
 done
 
+_CONFIGUREDDISK=$(cat diskUsed.txt)
+_CONFIGUREDDISK=$( $_CONFIGUREDDISK+4 )
+
 if [[ $_DISTRO -eq "gentoo" ]]; then 
-    mount $_CONFIGUREDDISK4 /mnt/gentoo
+    mount $_CONFIGUREDDISK /mnt/gentoo
 else
     mkdir /mnt/gentoo
-    mount $_CONFIGUREDDISK4 /mnt/gentoo
+    mount $_CONFIGUREDDISK /mnt/gentoo
 fi
 
 # Set time
