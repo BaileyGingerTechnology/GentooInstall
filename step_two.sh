@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author  : Bailey Kasin
-# Date    : 12/14/2017
-# Purpose : Main file of a suite of Gentoo install and config scripts
+# Date    : 2/21/2018
+# Purpose : Step two of the Gentoo install
 
 source ./include/src/preflight.sh
 source ./include/src/disk_functions.sh
@@ -54,31 +54,7 @@ check_root
 check_distro
 
 echo "Preflight done, should be good to go!"
-echo "First step is disk setup."
-disks=( $(ls /dev/sd[a-z] | sort -u -) ) 
 
-greenEcho "For a different disk, select one and then select 'Different' later."
-generateDialog "options" "Which disk should be used?" "${disks[@]}"
-read choice
+git clone https://github.com/BaileyGingerTechnology/GentooInstall.git /mnt/gentoo/GentooInstall
 
-parted -a optimal ${disks[$choice-1]} print
-echo "Using disk ${disks[$choice-1]}. This next step will wipe that disk, is that okay?"
-select ynd in "Yes" "No" "Different"; do
-    case $ynd in
-        Yes ) partition_disk ${disks[$choice-1]}; break;;
-        No ) echo "The install is incomplete and rebooting will either take you to the existing OS, or restart the process."; exit;;
-        Different ) different_disk; break;;
-    esac
-done
-
-if [[ $_DISTRO -eq "gentoo" ]]; then 
-    mount $_CONFIGUREDDISK4 /mnt/gentoo
-else
-    mkdir /mnt/gentoo
-    mount $_CONFIGUREDDISK4 /mnt/gentoo
-fi
-
-# Set time
-ntpd -q -g
-
-download_tarball
+greenEcho "Step two done. Now go back to the original terminal and run step_three.sh."

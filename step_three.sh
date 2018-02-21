@@ -54,31 +54,46 @@ check_root
 check_distro
 
 echo "Preflight done, should be good to go!"
-echo "First step is disk setup."
-disks=( $(ls /dev/sd[a-z] | sort -u -) ) 
+emerge_update
+pick_profile
+download_install_kernel
+set_hostname
+configure_network
 
-greenEcho "For a different disk, select one and then select 'Different' later."
-generateDialog "options" "Which disk should be used?" "${disks[@]}"
-read choice
+echo "Now setting password for root user!"
+passwd
 
-parted -a optimal ${disks[$choice-1]} print
-echo "Using disk ${disks[$choice-1]}. This next step will wipe that disk, is that okay?"
-select ynd in "Yes" "No" "Different"; do
+# Installing system tools
+emerge app-admin/sysklogd
+rc-update add sysklogd default
+
+emerge sys-process/cronie
+rc-update add cronie default
+
+emerge sys-apps/mlocate
+
+echo "Do you need SSH access to this computer?"
+select ynd in "Yes" "No"; do
     case $ynd in
-        Yes ) partition_disk ${disks[$choice-1]}; break;;
-        No ) echo "The install is incomplete and rebooting will either take you to the existing OS, or restart the process."; exit;;
-        Different ) different_disk; break;;
+        Yes ) rc-update add sshd default; break;;
+        No ) break;;
     esac
 done
 
-if [[ $_DISTRO -eq "gentoo" ]]; then 
-    mount $_CONFIGUREDDISK4 /mnt/gentoo
-else
-    mkdir /mnt/gentoo
-    mount $_CONFIGUREDDISK4 /mnt/gentoo
-fi
+emerge net-misc/dhcpcd
+emerge net-wireless/iw net-wireless/wpa_supplicant
 
-# Set time
-ntpd -q -g
+greenEcho "Installing grub"
+install_grub ${disks[$choice-1]}
 
-download_tarball
+greenEcho "We should be done."
+exit
+cd
+umount -l /mnt/gentoo/dev{/shm,/pts,}
+umount -R /mnt/gentoo
+
+greenEcho "Going to reboot now. Good luck, soldier."
+greenEcho "I suggest making a new user after the reboot. Refer to the Finalizing page of the Gentoo handbook for details on that."
+orangeEcho "Press enter to reboot"
+read enter
+reboot

@@ -4,11 +4,17 @@
 # Purpose : Functiona used to get the stage3 tarball
 
 function emerge_update {
+	echo "Mounting boot partition."
+	mkdir /boot
+	mount /dev/$_CONFIGUREDDISK2 /boot
+
 	emerge-webrsync
 	emerge --sync
 }
 
 function resolv_mount {
+	mkdir --parents /mnt/gentoo/etc/portage/repos.conf
+	cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
 	echo "Copying over resolv.conf"
 	cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
 	echo "Copying over the fstab file made earlier"
@@ -27,20 +33,16 @@ function resolv_mount {
 		chmod 1777 /dev/shm
 	fi
 
+	greenEcho "About to chroot. This will cause the script to exit. After it does, open a new terminal and run step_two.sh with sudo privileges. DO NOT CLOSE THIS TERMINAL."
+	read enter
 	chroot /mnt/gentoo /bin/bash
 	source /etc/profile
 	export PS1="(chroot) ${PS1}"
-
-	echo "Mounting boot partition."
-	mkdir /boot
-	mount /dev/$_CONFIGUREDDISK2 /boot
-
-	emerge_update
 }
 
 function make_make {
 	core_count=$(lscpu |grep CPU |(sed -n 2p) |awk '{print $2}')
-
+	core_count=$( $core_count+1 )
 	if [[ $_DISTRO -eq "gentoo" ]]; then 
     	greenEcho "Pick the mirror closest to you."
 		echo  "Press enter to continue."
@@ -50,7 +52,7 @@ function make_make {
     	echo "Since you are not using Gentoo, mirrorselect will not work. Setting mirror to "
     	#mount ${disks[$choice-1]}4 /mnt/gentoo
 	fi
-	echo $core_count+1 >> /mnt/gentoo/etc/portage/make.conf
+	echo "MAKEOPTS=-j$core_count" >> /mnt/gentoo/etc/portage/make.conf
 
 	echo "Portage configured. Preparing for chroot."
 	resolv_mount
