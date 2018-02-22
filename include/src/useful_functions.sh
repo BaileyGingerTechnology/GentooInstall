@@ -3,22 +3,27 @@
 # Date    : 1/9/2018
 # Purpose : Useful functions to add ease of use
 
-function redEcho {
+function redEcho
+{
     echo -e $(tput setaf 1)$1$(tput sgr0)
 }
 
-function greenEcho {
+function greenEcho
+{
     echo $(tput setaf 2)$1$(tput sgr0)
 }
 
-function orangeEcho {
+function orangeEcho
+{
     echo $(tput setaf 3)$1$(tput sgr0)
 }
 
-function blueEcho {
+function blueEcho
+{
     echo $(tput setaf 4)$1$(tput sgr0)
 }
 
-function pinkEcho {
+function pinkEcho
+{
     echo $(tput setaf 5)$1$(tput sgr0)
 }

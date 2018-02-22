@@ -11,6 +11,7 @@ source ./include/src/useful_functions.sh
 source ./include/src/profile_functions.sh
 source ./include/src/kernel_functions.sh
 source ./include/src/system_var_functions.sh
+source ./include/src/install_mirrorselect.sh
 
 echo "$(tput setaf 3)
     
@@ -56,6 +57,8 @@ check_root
 # Check whether on Gentoo or other OS
 check_distro
 
+rsync -ah --progress include/src/install_mirrorselect.sh /tmp/install_mirrorselect.sh
+
 echo "Preflight done, should be good to go!"
 echo "First step is disk setup."
 # Make array of possible disks that can be mounted
@@ -92,7 +95,7 @@ fi
 
 # Move the diskUsed file over
 mkdir /mnt/gentoo/tmp
-cp /tmp/diskUsed.txt /mnt/gentoo/tmp
+rsync -ah --progress /tmp/diskUsed.txt /mnt/gentoo/tmp
 
 # Set time
 ntpd -q -g

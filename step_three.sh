@@ -1,6 +1,6 @@
 #!/bin/bash
 # Author  : Bailey Kasin
-# Date    : 12/14/2017
+# Date    : 2/21/2017
 # Purpose : Main file of a suite of Gentoo install and config scripts
 
 source ./include/src/preflight.sh
@@ -11,6 +11,7 @@ source ./include/src/useful_functions.sh
 source ./include/src/profile_functions.sh
 source ./include/src/kernel_functions.sh
 source ./include/src/system_var_functions.sh
+source ./include/src/install_mirrorselect.sh
 
 echo "$(tput setaf 3)
     

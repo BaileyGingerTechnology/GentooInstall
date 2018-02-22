@@ -3,7 +3,8 @@
 # Date    : 2/21/2018
 # Purpose : Configure networking
 
-function configure_network {
+function configure_network
+{
     # Install netifrc
     emerge --noreplace net-misc/netifrc
 

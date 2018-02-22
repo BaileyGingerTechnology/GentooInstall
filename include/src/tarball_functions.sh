@@ -3,7 +3,8 @@
 # Date    : 12/25/2017
 # Purpose : Functiona used to get the stage3 tarball
 
-function emerge_update {
+function emerge_update
+{
 	# Finish the chroot
 	source /etc/profile
 	export PS1="(chroot) ${PS1}"
@@ -29,15 +30,16 @@ function emerge_update {
 	fi
 }
 
-function resolv_mount {
+function resolv_mount
+{
 	# Make the repos.conf directory for portage
 	mkdir --parents /mnt/gentoo/etc/portage/repos.conf
 	# And then put the default config there
-	cp /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
+	rsync -ah --progress /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
 	echo "Copying over resolv.conf"
-	cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
+	rsync -ah --progress --dereference /etc/resolv.conf /mnt/gentoo/etc/
 	echo "Copying over the fstab file made earlier"
-	cp /tmp/fstab /mnt/gentoo/etc/
+	rsync -ah --progress /tmp/fstab /mnt/gentoo/etc/
 
 	echo "Mount filesystem and chroot."
 	mount --types proc /proc /mnt/gentoo/proc
@@ -58,22 +60,26 @@ function resolv_mount {
 	chroot /mnt/gentoo /bin/bash
 }
 
-function make_make {
+function make_make
+{
 	# Get how many cores/threads the CPU has, and then add 1
 	core_count=$(lscpu |grep CPU |(sed -n 2p) |awk '{print $2}')
 	let core_count+=1
+
+	_DISTRO=$( cat /tmp/_DISTRO )
 
 	# Gentoo has a script called mirrorselect, which handles the setting of a repo mirror.
 	# Other OSes do not. So let Gentoo users do it that way, and a different way will have
 	# to be found for others.
 	if [[ $_DISTRO -eq "gentoo" ]]; then 
-    	greenEcho "Pick the mirror closest to you."
+    	greenEcho "Now autopicking the closest mirror to you by downloading 100kb from each option and going with the fastest one."
 		echo  "Press enter to continue."
 		read enter
-    	mirrorselect -i -o >> /mnt/gentoo/etc/portage/make.conf
+    	mirrorselect -s4 -b10 -o -D >> /mnt/gentoo/etc/portage/make.conf
 	else
-    	echo "Since you are not using Gentoo, mirrorselect will not work. Setting mirror to "
-    	#mount ${disks[$choice-1]}4 /mnt/gentoo
+    	orangeEcho "Since you are not using Gentoo, going to install mirrorselect from source."
+		/tmp/install_mirrorselect.sh
+    	mirrorselect -s4 -b10 -o -D >> /mnt/gentoo/etc/portage/make.conf
 	fi
 
 	# If setting the core count kept the plus, set it to 2 instead
@@ -88,7 +94,8 @@ function make_make {
 	resolv_mount
 }
 
-function download_tarball {
+function download_tarball
+{
 	cd /mnt/gentoo
 
 	greenEcho "This is where we get the tarball that will be used to make the base filesystem. Eventually I may be able to automate this part, but for now I am going to open links to Gentoo's mirror page.

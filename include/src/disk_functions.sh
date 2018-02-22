@@ -3,7 +3,8 @@
 # Date    : 12/14/2017
 # Purpose : Functions used for disk setup
 
-function set_filesystems {
+function set_filesystems
+{
 	# Make the boot partition FAT32
 	mkfs.vfat -F 32 $12
 	# Make the file partition ext4
@@ -23,7 +24,8 @@ function set_filesystems {
 	echo "/dev/cdrom	/mnt/cdrom	auto	noauto,user			0 0" >> /tmp/fstab
 }
 
-function partition_disk {
+function partition_disk
+{
 	# Save the disk used to a file for later use
 	echo $1 > /tmp/diskUsed.txt
 
@@ -53,7 +55,8 @@ function partition_disk {
 }
 
 # Let the user enter a different disk and then partition it
-function different_disk {
+function different_disk
+{
 	echo "Enter disk to use in format '/dev/xxx'"
 	read input
 	partition_disk $input

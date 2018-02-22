@@ -11,6 +11,7 @@ source ./include/src/useful_functions.sh
 source ./include/src/profile_functions.sh
 source ./include/src/kernel_functions.sh
 source ./include/src/system_var_functions.sh
+source ./include/src/install_mirrorselect.sh
 
 echo "$(tput setaf 3)
     
@@ -58,6 +59,6 @@ echo "Preflight done, should be good to go!"
 
 # Move the GentooInstall director into the chroot zone
 cd ../
-mv GentooInstall /mnt/gentoo/GentooInstall
+rsync -ah --progress GentooInstall /mnt/gentoo/GentooInstall
 
 greenEcho "Step two done. Now go back to the original terminal and run step_three.sh."

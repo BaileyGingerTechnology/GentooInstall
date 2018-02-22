@@ -3,7 +3,8 @@
 # Date    : 2/19/2018
 # Purpose : Download and install the kernel
 
-function download_install_kernel {
+function download_install_kernel
+{
     # Download kernel sources
     emerge sys-kernel/gentoo-sources
 
