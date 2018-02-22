@@ -29,7 +29,7 @@ echo "$(tput setaf 3)
  \___/_| |_|___/\__\__,_|_|_|\___|_|   
                                        
 
-    Version: 1.0
+    Version: 1.1
     Email: baileykasin@gmail.com
     For Latest Version Visit https://github.com/BaileyGingerTechnology/GentooInstall
 

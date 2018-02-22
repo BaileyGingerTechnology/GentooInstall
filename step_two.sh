@@ -11,7 +11,6 @@ source ./include/src/useful_functions.sh
 source ./include/src/profile_functions.sh
 source ./include/src/kernel_functions.sh
 source ./include/src/system_var_functions.sh
-source ./include/src/install_mirrorselect.sh
 
 echo "$(tput setaf 3)
     
@@ -31,7 +30,7 @@ echo "$(tput setaf 3)
  \___/_| |_|___/\__\__,_|_|_|\___|_|   
                                        
 
-    Version: 1.0
+    Version: 1.1
     Email: baileykasin@gmail.com
     For Latest Version Visit https://github.com/BaileyGingerTechnology/GentooInstall
 
@@ -53,12 +52,11 @@ echo "$(tput setaf 3)
 $(tput sgr0)";
 
 check_root
-check_distro
 
 echo "Preflight done, should be good to go!"
 
 # Move the GentooInstall director into the chroot zone
 cd ../
-rsync -ah --progress GentooInstall /mnt/gentoo/GentooInstall
+rsync -ah --progress GentooInstall /mnt/gentoo/
 
 greenEcho "Step two done. Now go back to the original terminal and run step_three.sh."

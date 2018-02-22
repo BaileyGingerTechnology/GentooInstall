@@ -11,7 +11,6 @@ source ./include/src/useful_functions.sh
 source ./include/src/profile_functions.sh
 source ./include/src/kernel_functions.sh
 source ./include/src/system_var_functions.sh
-source ./include/src/install_mirrorselect.sh
 
 echo "$(tput setaf 3)
     
@@ -31,7 +30,7 @@ echo "$(tput setaf 3)
  \___/_| |_|___/\__\__,_|_|_|\___|_|   
                                        
 
-    Version: 1.0
+    Version: 1.1
     Email: baileykasin@gmail.com
     For Latest Version Visit https://github.com/BaileyGingerTechnology/GentooInstall
 
@@ -54,8 +53,6 @@ $(tput sgr0)";
 
 # Check for root privileges
 check_root
-# Check whether on Gentoo or other OS
-check_distro
 
 echo "Preflight done, should be good to go!"
 # Go into the tarball_functions directory and sync/update emerge

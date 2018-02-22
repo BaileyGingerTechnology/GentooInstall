@@ -29,7 +29,7 @@ function set_timezone
     greenEcho "Now setting time zone."
 
     # Make array of timezone regions
-    timezones=( $(for i in $(ls -d /usr/share/timezone/*/ |cut -c21-); do echo ${i%%/}; done) )
+    timezones=( $(for i in $(ls -d /usr/share/zoneinfo/*/ |cut -c21-); do echo ${i%%/}; done) )
     generateDialog "options" "Which region should options be printed for?" "${timezones[@]}"
     read timezonePicked
 
@@ -40,7 +40,7 @@ function set_timezone
 
     # Send the selected one to a file
     greenEcho "Sending info into timezone file and updating"
-    echo "${timezones[timezonePicked-1]}" > /etc/timezone
+    echo "${timezones[$timezonePicked-1]}" > /etc/timezone
     # Update timezone info
     emerge --config sys-libs/timezone-data
 
