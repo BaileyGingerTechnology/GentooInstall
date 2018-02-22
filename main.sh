@@ -50,14 +50,13 @@ echo "$(tput setaf 3)
 
 $(tput sgr0)";
 
+rsync -ah --progress include/src/install_mirrorselect.sh /tmp/install_mirrorselect.sh
 source ./include/src/preflight.sh
 
 # Check for root privileges
 check_root
 # Check whether on Gentoo or other OS
 check_distro
-
-rsync -ah --progress include/src/install_mirrorselect.sh /tmp/install_mirrorselect.sh
 
 echo "Preflight done, should be good to go!"
 echo "First step is disk setup."
@@ -84,17 +83,9 @@ done
 # Get the disk to mount from the file it was saved in and then append 4 to it
 _CONFIGUREDDISK=$( cat /tmp/diskUsed.txt )
 _CONFIGUREDDISK="${_CONFIGUREDDISK}4"
-_DISTRO=$( cat /tmp/_DISTRO )
 
 # Mount that disk to be used as the actual install location
-if [[ $_DISTRO -eq "gentoo" ]]; then 
-    mount $_CONFIGUREDDISK /mnt/gentoo
-else
-    mkdir /mnt/gentoo
-    orangeEcho "Since you are not using Gentoo, going to install mirrorselect from source."
-    source ./include/src/install_mirrorselect.sh
-    mount $_CONFIGUREDDISK /mnt/gentoo
-fi
+mount $_CONFIGUREDDISK /mnt/gentoo
 
 # Move the diskUsed file over
 mkdir /mnt/gentoo/tmp

@@ -12,7 +12,7 @@ function check_root
       exit 0;
     fi
 
-    echo "Super user access has been detected. Press a button on your keyboard to begin."
+    echo "Super user access has been detected. Press enter to begin."
     read enter
 }
 
@@ -20,6 +20,9 @@ function not_gentoo
 {
     orangeEcho "Since you are not on Gentoo, some extra steps will need to be taken
     during portions of this install, but it should still all go fine."
+    mkdir /mnt/gentoo
+    orangeEcho "Since you are not using Gentoo, going to install mirrorselect from source."
+    /tmp/install_mirrorselect.sh
 }
 
 function check_distro
@@ -30,6 +33,7 @@ function check_distro
 
     _ID=0
     _DISTRO=$( cat /etc/*-release | tr [:upper:] [:lower:] | grep -Poi '(debian|ubuntu|red hat|centos|gentoo|arch)' | uniq )
+    echo $_DISTRO > /tmp/_DISTRO
 
     if [ -z $_DISTRO ]; then
       _DISTRO='$_MSGERROR Distrobution Detection Failed!'
@@ -43,7 +47,7 @@ function check_distro
       not_gentoo
       apt-get -y update
       apt-get -y install build-essential
-      apt-get -y install wget rsync bzip2 git links ntpd
+      apt-get -y install wget rsync bzip2 git links ntp
     fi
 
 
@@ -53,7 +57,7 @@ function check_distro
       not_gentoo
       apt-get -y update
       apt-get -y install build-essential
-      apt-get -y install wget rsync bzip2 git links ntpd
+      apt-get -y install wget rsync bzip2 git links ntp
     fi
 
 
@@ -61,7 +65,7 @@ function check_distro
       _ID=3
       _NAME=RedHat
       not_gentoo
-      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntpd
+      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntp
     fi
 
 
@@ -69,7 +73,7 @@ function check_distro
       _ID=4
       _NAME=CentOS
       not_gentoo
-      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntpd
+      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntp
     fi
 
 
@@ -85,8 +89,6 @@ function check_distro
       _NAME=Arch
       _BANNER=""
       not_gentoo
-      pacman -S --noconfirm base-devel rsync git wget links ntpd
+      pacman -S --noconfirm base-devel rsync git wget links ntp
     fi
-
-    echo $_DISTRO > /tmp/_DISTRO
 }
