@@ -11,6 +11,9 @@ function check_root
       redEcho "$_MSGERROR No Super User access....now exiting..";
       exit 0;
     fi
+
+    echo "Super user access has been detected. Press a button on your keyboard to begin."
+    read enter
 }
 
 function not_gentoo
@@ -37,36 +40,36 @@ function check_distro
     if [ "$_DISTRO" = "debian" ]; then
       _ID=1
       _NAME=Debian
-      apt-get -y install build-essential
-      apt-get -y install python2.3 python2.3-dev
-      apt-get -y install wget rsync bzip2 git
       not_gentoo
+      apt-get -y update
+      apt-get -y install build-essential
+      apt-get -y install wget rsync bzip2 git links ntpd
     fi
 
 
     if [ "$_DISTRO" = "ubuntu" ]; then
       _ID=2
       _NAME=Ubuntu
-      apt-get -y install build-essential
-      apt-get -y install python2.3 python2.3-dev
-      apt-get -y install wget rsync bzip2 git
       not_gentoo
+      apt-get -y update
+      apt-get -y install build-essential
+      apt-get -y install wget rsync bzip2 git links ntpd
     fi
 
 
     if [ "$_DISTRO" = "red hat" ]; then
       _ID=3
       _NAME=RedHat
-      yum -y install gcc gcc-c++ make openssl-devel wget rsync git
       not_gentoo
+      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntpd
     fi
 
 
     if [ "$_DISTRO" = "centos" ]; then
       _ID=4
       _NAME=CentOS
-      yum -y install gcc gcc-c++ make openssl-devel wget rsync git
       not_gentoo
+      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntpd
     fi
 
 
@@ -81,8 +84,8 @@ function check_distro
       _ID=6
       _NAME=Arch
       _BANNER=""
-      pacman -S --noconfirm base-devel rsync git wget
       not_gentoo
+      pacman -S --noconfirm base-devel rsync git wget links ntpd
     fi
 
     echo $_DISTRO > /tmp/_DISTRO

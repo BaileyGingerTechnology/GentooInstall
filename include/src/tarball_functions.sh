@@ -37,7 +37,7 @@ function resolv_mount
 	# And then put the default config there
 	rsync -ah --progress /mnt/gentoo/usr/share/portage/config/repos.conf /mnt/gentoo/etc/portage/repos.conf/gentoo.conf
 	echo "Copying over resolv.conf"
-	rsync -ah --progress --dereference /etc/resolv.conf /mnt/gentoo/etc/
+	cp --dereference /etc/resolv.conf /mnt/gentoo/etc/
 	echo "Copying over the fstab file made earlier"
 	rsync -ah --progress /tmp/fstab /mnt/gentoo/etc/
 
@@ -66,21 +66,11 @@ function make_make
 	core_count=$(lscpu |grep CPU |(sed -n 2p) |awk '{print $2}')
 	let core_count+=1
 
-	_DISTRO=$( cat /tmp/_DISTRO )
-
-	# Gentoo has a script called mirrorselect, which handles the setting of a repo mirror.
-	# Other OSes do not. So let Gentoo users do it that way, and a different way will have
-	# to be found for others.
-	if [[ $_DISTRO -eq "gentoo" ]]; then 
-    	greenEcho "Now autopicking the closest mirror to you by downloading 100kb from each option and going with the fastest one."
-		echo  "Press enter to continue."
-		read enter
-    	mirrorselect -s4 -b10 -o -D >> /mnt/gentoo/etc/portage/make.conf
-	else
-    	orangeEcho "Since you are not using Gentoo, going to install mirrorselect from source."
-		/tmp/install_mirrorselect.sh
-    	mirrorselect -s4 -b10 -o -D >> /mnt/gentoo/etc/portage/make.conf
-	fi
+	# Use the mirrorselect script to autoselect the best mirror to sync from
+	greenEcho "Now autopicking the closest mirror to you by downloading 100kb from each option and going with the fastest one."
+	echo  "Press enter to continue."
+	read enter
+    mirrorselect -s4 -b10 -o -D >> /mnt/gentoo/etc/portage/make.conf
 
 	# If setting the core count kept the plus, set it to 2 instead
 	# Otherwise, echo the core count into make.conf

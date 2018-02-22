@@ -3,7 +3,6 @@
 # Date    : 12/14/2017
 # Purpose : Main file of a suite of Gentoo install and config scripts
 
-source ./include/src/preflight.sh
 source ./include/src/disk_functions.sh
 source ./include/src/menu.sh
 source ./include/src/tarball_functions.sh
@@ -11,7 +10,6 @@ source ./include/src/useful_functions.sh
 source ./include/src/profile_functions.sh
 source ./include/src/kernel_functions.sh
 source ./include/src/system_var_functions.sh
-source ./include/src/install_mirrorselect.sh
 
 echo "$(tput setaf 3)
     
@@ -52,6 +50,8 @@ echo "$(tput setaf 3)
 
 $(tput sgr0)";
 
+source ./include/src/preflight.sh
+
 # Check for root privileges
 check_root
 # Check whether on Gentoo or other OS
@@ -62,7 +62,7 @@ rsync -ah --progress include/src/install_mirrorselect.sh /tmp/install_mirrorsele
 echo "Preflight done, should be good to go!"
 echo "First step is disk setup."
 # Make array of possible disks that can be mounted
-disks=( $(ls /dev/sd[a-z] | sort -u -) ) 
+disks=( $(ls /dev/sd[a-z] | sort -u -) )
 
 greenEcho "For a different disk, select one and then select 'Different' later."
 # Generate a menu of the disks for the user to chose from
@@ -84,12 +84,15 @@ done
 # Get the disk to mount from the file it was saved in and then append 4 to it
 _CONFIGUREDDISK=$( cat /tmp/diskUsed.txt )
 _CONFIGUREDDISK="${_CONFIGUREDDISK}4"
+_DISTRO=$( cat /tmp/_DISTRO )
 
 # Mount that disk to be used as the actual install location
 if [[ $_DISTRO -eq "gentoo" ]]; then 
     mount $_CONFIGUREDDISK /mnt/gentoo
 else
     mkdir /mnt/gentoo
+    orangeEcho "Since you are not using Gentoo, going to install mirrorselect from source."
+    source ./include/src/install_mirrorselect.sh
     mount $_CONFIGUREDDISK /mnt/gentoo
 fi
 
