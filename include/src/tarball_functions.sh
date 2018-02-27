@@ -73,7 +73,7 @@ function make_make
 	regions=( North_America South_America Europe Australia Asia Middle_East )
 	generateDialog "options" "Which region should are you in?" "${regions[@]}"
 	read region
-	region=${regions[region]}
+	region=${regions[region-1]}
 
 	case "$1" in
 		North_America)
@@ -99,6 +99,7 @@ function make_make
 
 	generateDialog "options" "And, now which country are you in?" "${countries[@]}"
 	read country
+	country=${countries[country-1]}
 	country=${country//_/ }
 
     mirrorselect -s4 -b10 -o -c $country -D >> /mnt/gentoo/etc/portage/make.conf

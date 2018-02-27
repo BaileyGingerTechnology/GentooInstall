@@ -20,9 +20,6 @@ function not_gentoo
 {
     orangeEcho "Since you are not on Gentoo, some extra steps will need to be taken
     during portions of this install, but it should still all go fine."
-    mkdir /mnt/gentoo
-    cd ../
-    rsync -ah --progress GentooInstall /mnt/gentoo/
     orangeEcho "Since you are not using Gentoo, going to install mirrorselect from source."
     /tmp/install_mirrorselect.sh
 }
@@ -82,8 +79,6 @@ function check_distro
     if [ "$_DISTRO" = "gentoo" ]; then
       _ID=5
       _NAME=Gentoo
-      cd ../
-      rsync -ah --progress GentooInstall /mnt/gentoo/
       orangeEcho "Since you are on Gentoo, everything should go fine and be bit a faster during
       the install process."
     fi

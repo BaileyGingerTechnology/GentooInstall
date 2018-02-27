@@ -55,6 +55,9 @@ source ./include/src/preflight.sh
 
 # Check for root privileges
 check_root
+mkdir -p /mnt/gentoo
+cd ../
+rsync -ah --progress GentooInstall /mnt/gentoo/
 # Check whether on Gentoo or other OS
 check_distro
 
