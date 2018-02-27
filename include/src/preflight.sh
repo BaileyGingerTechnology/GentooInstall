@@ -20,7 +20,6 @@ function not_gentoo
 {
     orangeEcho "Since you are not on Gentoo, some extra steps will need to be taken
     during portions of this install, but it should still all go fine."
-    mkdir /mnt/gentoo
     orangeEcho "Since you are not using Gentoo, going to install mirrorselect from source."
     /tmp/install_mirrorselect.sh
 }
@@ -47,7 +46,7 @@ function check_distro
       not_gentoo
       apt-get -y update
       apt-get -y install build-essential
-      apt-get -y install wget rsync bzip2 git links ntp
+      apt-get -y install wget rsync bzip2 git links ntp dialog
     fi
 
 
@@ -57,7 +56,7 @@ function check_distro
       not_gentoo
       apt-get -y update
       apt-get -y install build-essential
-      apt-get -y install wget rsync bzip2 git links ntp
+      apt-get -y install wget rsync bzip2 git links ntp dialog
     fi
 
 
@@ -65,7 +64,7 @@ function check_distro
       _ID=3
       _NAME=RedHat
       not_gentoo
-      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntp
+      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntp dialog
     fi
 
 
@@ -73,7 +72,7 @@ function check_distro
       _ID=4
       _NAME=CentOS
       not_gentoo
-      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntp
+      yum -y install gcc gcc-c++ make openssl-devel wget rsync git links ntp dialog
     fi
 
 
@@ -89,6 +88,6 @@ function check_distro
       _NAME=Arch
       _BANNER=""
       not_gentoo
-      pacman -S --noconfirm base-devel rsync git wget links ntp
+      pacman -S --noconfirm base-devel rsync git wget links ntp dialog
     fi
 }

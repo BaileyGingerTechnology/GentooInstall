@@ -87,6 +87,10 @@ _CONFIGUREDDISK="${_CONFIGUREDDISK}4"
 # Mount that disk to be used as the actual install location
 mount $_CONFIGUREDDISK /mnt/gentoo
 
+toolLocation=$( find / |grep GentooInstall |head -n1 )
+cd $toolLocation && cd ../
+rsync -ah --progress GentooInstall /mnt/gentoo/
+
 # Move the diskUsed file over
 mkdir /mnt/gentoo/tmp
 rsync -ah --progress /tmp/diskUsed.txt /mnt/gentoo/tmp
