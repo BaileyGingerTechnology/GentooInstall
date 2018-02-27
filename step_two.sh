@@ -1,7 +1,7 @@
 #!/bin/bash
 # Author  : Bailey Kasin
-# Date    : 2/21/2018
-# Purpose : Step two of the Gentoo install
+# Date    : 2/21/2017
+# Purpose : Main file of a suite of Gentoo install and config scripts
 
 source ./include/src/preflight.sh
 source ./include/src/disk_functions.sh
@@ -51,12 +51,60 @@ echo "$(tput setaf 3)
 
 $(tput sgr0)";
 
+# Check for root privileges
 check_root
 
 echo "Preflight done, should be good to go!"
+# Go into the tarball_functions directory and sync/update emerge
+emerge_update
+# Select the profile
+pick_profile
+# Download the kernel sources
+download_install_kernel
+# Go into system_var_functions and configure stuff there
+set_hostname
+# Configure network interface
+configure_network
 
-# Move the GentooInstall director into the chroot zone
-cd ../
-rsync -ah --progress GentooInstall /mnt/gentoo/
+echo "Now setting password for root user!"
+passwd
 
-greenEcho "Step two done. Now go back to the original terminal and run step_three.sh."
+# Installing system tools
+# Logger
+emerge app-admin/sysklogd
+rc-update add sysklogd default
+
+# Cron manager
+emerge sys-process/cronie
+rc-update add cronie default
+
+# Indexing system
+emerge sys-apps/mlocate
+
+# Set SSH server to start at boot if needed
+echo "Do you need SSH access to this computer?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) rc-update add sshd default; break;;
+        No ) break;;
+    esac
+done
+
+# Install DHCP client
+emerge net-misc/dhcpcd
+# Install wireless tools
+emerge net-wireless/iw net-wireless/wpa_supplicant
+
+greenEcho "Installing grub"
+# Set value from file to variable again
+_CONFIGUREDDISK=$(cat /tmp/diskUsed.txt)
+# Install GRUB on that disk
+install_grub $_CONFIGUREDDISK
+
+greenEcho "We should be done."
+
+greenEcho "Going to reboot now. Good luck, soldier."
+greenEcho "I suggest making a new user after the reboot. Refer to the Finalizing page of the Gentoo handbook for details on that."
+orangeEcho "Press enter to reboot"
+read enter
+reboot
