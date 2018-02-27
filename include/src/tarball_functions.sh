@@ -73,9 +73,9 @@ function make_make
 	regions=( North_America South_America Europe Australia Asia Middle_East )
 	generateDialog "options" "Which region should are you in?" "${regions[@]}"
 	read region
-	region=${regions[region-1]}
+	region=${regions[region]}
 
-	case "$1" in
+	case "$region" in
 		North_America)
             countries=( Canada USA )
             ;;
