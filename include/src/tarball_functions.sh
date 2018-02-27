@@ -55,7 +55,7 @@ function resolv_mount
 		chmod 1777 /dev/shm
 	fi
 
-	greenEcho "About to chroot. This will cause the script to exit. After it does, open a new terminal and run step_two.sh with sudo privileges. DO NOT CLOSE THIS TERMINAL."
+	greenEcho "About to chroot. This will begin step two, which will cause a second run of the preflight steps, and then everything will pick up where it left off. Press enter to continue."
 	read enter
 	chroot /mnt/gentoo /bin/bash GentooInstall/step_two.sh
 }
@@ -73,7 +73,7 @@ function make_make
 	regions=( North_America South_America Europe Australia Asia Middle_East )
 	generateDialog "options" "Which region should are you in?" "${regions[@]}"
 	read region
-	region=${regions[region]}
+	region=${regions[region-1]}
 
 	case "$region" in
 		North_America)

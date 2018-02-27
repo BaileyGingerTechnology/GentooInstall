@@ -3,6 +3,8 @@
 # Date    : 2/21/2017
 # Purpose : Main file of a suite of Gentoo install and config scripts
 
+cd /GentooInstall/
+
 source ./include/src/preflight.sh
 source ./include/src/disk_functions.sh
 source ./include/src/menu.sh
